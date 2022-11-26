@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # Inicializa Pygame
 pygame.init()
@@ -11,17 +12,25 @@ pygame.display.set_caption("Invasion de amor")
 icono = pygame.image.load("avion-de-papel.png")
 pygame.display.set_icon(icono)
 
-# Jugador
+# Variables del Jugador
 tilincha = pygame.image.load("mujer.png")
-
-# Variables
 jugador_x = 368
 jugador_y = 530
 jugador_x_cambio = 0
 
+# Variables del Enemigo
+corazon = pygame.image.load("corazon.png")
+enemigo_x = random.randint(0,736)
+enemigo_y = random.randint(50,250)
+enemigo_x_cambio = 0
+
 # Funcion Jugador
 def jugador(x, y):
     pantalla.blit(tilincha, (x, y))
+
+# Funcion Enemigo
+def enemigo(x,y):
+    pantalla.blit(corazon, (x, y))
 
 # Loop del Juego
 se_ejecuta = True
@@ -45,7 +54,7 @@ while se_ejecuta:
             if evento.key == pygame.K_LEFT:
                 # print("Tecla izquierda presionada")
                 jugador_x_cambio = -0.1
-            if evento.key == pygame.K_RIGHT:
+            elif evento.key == pygame.K_RIGHT:
                 # print("Tecla Derecha presionada")
                 jugador_x_cambio = 0.1
 
@@ -65,6 +74,7 @@ while se_ejecuta:
         jugador_x = 736
 
     jugador(jugador_x, jugador_y)
+    enemigo(enemigo_x, enemigo_y)
 
     # Actualizar
     pygame.display.update()
