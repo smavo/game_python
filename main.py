@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 # Inicializa Pygame
 pygame.init()
@@ -23,7 +24,7 @@ jugador_x_cambio = 0
 corazon = pygame.image.load("corazon.png")
 enemigo_x = random.randint(0,736)
 enemigo_y = random.randint(50,250)
-enemigo_x_cambio = 0.2
+enemigo_x_cambio = 0.5
 enemigo_y_cambio = 50
 
 # Variables de la bala
@@ -31,8 +32,11 @@ bala = pygame.image.load("bala.png")
 bala_x = 0
 bala_y = 530
 bala_x_cambio = 0
-bala_y_cambio = 1
+bala_y_cambio = 2
 bala_visible = False
+
+# Variable puntaje
+puntaje = 0
 
 # Funcion Jugador
 def jugador(x, y):
@@ -47,6 +51,14 @@ def disparar_bala(x,y):
     global bala_visible
     bala_visible = True
     pantalla.blit(bala, (x + 16, y + 10))
+
+# Funcion Detectar colisones
+def es_colision(x_1, y_1, x_2, y_2):
+    distancia = math.sqrt(math.pow(x_1 - x_2, 2) + math.pow(y_1 - y_2, 2))
+    if distancia < 27:
+        return True
+    else:
+        return False
 
 # Loop del Juego
 se_ejecuta = True
@@ -113,6 +125,16 @@ while se_ejecuta:
     if bala_visible:
         disparar_bala(bala_x, bala_y)
         bala_y -= bala_y_cambio
+
+    # Colision
+    colision = es_colision(enemigo_x, enemigo_y,bala_x, bala_y)
+    if colision:
+        bala_y = 530
+        bala_visible = False
+        puntaje += 1
+        print(puntaje)
+        enemigo_x = random.randint(0, 736)
+        enemigo_y = random.randint(50, 250)
 
     jugador(jugador_x, jugador_y)
     enemigo(enemigo_x, enemigo_y)
