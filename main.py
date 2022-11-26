@@ -1,12 +1,18 @@
 import pygame
 import random
 import math
+from pygame import mixer
 
 # Inicializa Pygame
 pygame.init()
 
 # Pantalla y dimenciones
 pantalla = pygame.display.set_mode((800, 600))
+
+# Agregar Musica
+mixer.music.load('MusicaFondo.mp3')
+mixer.music.set_volume(0.2)
+mixer.music.play(-1)
 
 # Titulo e Icono
 pygame.display.set_caption("Invasion de amor")
@@ -110,6 +116,8 @@ while se_ejecuta:
 
         # Evento detectar soltar flecha
         if evento.type == pygame.KEYUP:
+            sonido_bala = mixer.Sound('disparo.mp3')
+            sonido_bala.play()
             if evento.key == pygame.K_LEFT or evento.key == pygame.K_RIGHT:
                 # print("Se solto la flecha")
                 jugador_x_cambio = 0
@@ -138,6 +146,8 @@ while se_ejecuta:
         # Colision
         colision = es_colision(enemigo_x[e], enemigo_y[e], bala_x, bala_y)
         if colision:
+            sonido_colision = mixer.Sound('Golpe.mp3')
+            sonido_colision.play()
             bala_y = 530
             bala_visible = False
             puntaje += 1
