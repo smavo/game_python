@@ -21,18 +21,26 @@ jugador_y = 530
 jugador_x_cambio = 0
 
 # Variables del Enemigo
-corazon = pygame.image.load("corazon.png")
-enemigo_x = random.randint(0,736)
-enemigo_y = random.randint(50,250)
-enemigo_x_cambio = 0.5
-enemigo_y_cambio = 50
+corazon = []
+enemigo_x = []
+enemigo_y = []
+enemigo_x_cambio = []
+enemigo_y_cambio = []
+cantidad_enemigos = 8
+
+for e in range(cantidad_enemigos):
+    corazon.append(pygame.image.load("corazon.png"))
+    enemigo_x.append(random.randint(0,736))
+    enemigo_y.append(random.randint(50,250))
+    enemigo_x_cambio.append(0.6)
+    enemigo_y_cambio.append(50)
 
 # Variables de la bala
 bala = pygame.image.load("bala.png")
 bala_x = 0
 bala_y = 530
 bala_x_cambio = 0
-bala_y_cambio = 2
+bala_y_cambio = 4
 bala_visible = False
 
 # Variable puntaje
@@ -43,8 +51,8 @@ def jugador(x, y):
     pantalla.blit(tilincha, (x, y))
 
 # Funcion Enemigo
-def enemigo(x,y):
-    pantalla.blit(corazon, (x, y))
+def enemigo(x,y, ene):
+    pantalla.blit(corazon[ene], (x, y))
 
 # Funcion disparar
 def disparar_bala(x,y):
@@ -82,10 +90,10 @@ while se_ejecuta:
             # print("Una de las teclas fue seleccionada")
             if evento.key == pygame.K_LEFT:
                 # print("Tecla izquierda presionada")
-                jugador_x_cambio = -0.1
+                jugador_x_cambio = -0.8
             elif evento.key == pygame.K_RIGHT:
                 # print("Tecla Derecha presionada")
-                jugador_x_cambio = 0.1
+                jugador_x_cambio = 0.8
             elif evento.key == pygame.K_SPACE:
                 if not bala_visible:
                     bala_x = jugador_x
@@ -107,15 +115,28 @@ while se_ejecuta:
         jugador_x = 736
 
     # Modificar Ubicacion del enemigo
-    enemigo_x += enemigo_x_cambio
+    for e in range(cantidad_enemigos):
+        enemigo_x[e] += enemigo_x_cambio[e]
 
-    # Mantener dentro de la pantalla al jugador
-    if enemigo_x <= 0:
-        enemigo_x_cambio = 0.2
-        enemigo_y += enemigo_y_cambio
-    elif enemigo_x >= 736:
-        enemigo_x_cambio = -0.2
-        enemigo_y += enemigo_y_cambio
+        # Mantener dentro de la pantalla al jugador
+        if enemigo_x[e] <= 0:
+            enemigo_x_cambio[e] = 0.2
+            enemigo_y[e] += enemigo_y_cambio[e]
+        elif enemigo_x[e] >= 736:
+            enemigo_x_cambio[e] = -0.2
+            enemigo_y[e] += enemigo_y_cambio[e]
+
+        # Colision
+        colision = es_colision(enemigo_x[e], enemigo_y[e], bala_x, bala_y)
+        if colision:
+            bala_y = 530
+            bala_visible = False
+            puntaje += 1
+            print(puntaje)
+            enemigo_x[e] = random.randint(0, 736)
+            enemigo_y[e] = random.randint(50, 250)
+
+        enemigo(enemigo_x[e], enemigo_y[e], e)
 
     # Movimiendo Bala
     if bala_y <= -64:
@@ -126,18 +147,10 @@ while se_ejecuta:
         disparar_bala(bala_x, bala_y)
         bala_y -= bala_y_cambio
 
-    # Colision
-    colision = es_colision(enemigo_x, enemigo_y,bala_x, bala_y)
-    if colision:
-        bala_y = 530
-        bala_visible = False
-        puntaje += 1
-        print(puntaje)
-        enemigo_x = random.randint(0, 736)
-        enemigo_y = random.randint(50, 250)
+
 
     jugador(jugador_x, jugador_y)
-    enemigo(enemigo_x, enemigo_y)
+
 
     # Actualizar
     pygame.display.update()
