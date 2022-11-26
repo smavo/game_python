@@ -22,7 +22,8 @@ jugador_x_cambio = 0
 corazon = pygame.image.load("corazon.png")
 enemigo_x = random.randint(0,736)
 enemigo_y = random.randint(50,250)
-enemigo_x_cambio = 0
+enemigo_x_cambio = 0.2
+enemigo_y_cambio = 50
 
 # Funcion Jugador
 def jugador(x, y):
@@ -64,7 +65,7 @@ while se_ejecuta:
                 # print("Se solto la flecha")
                 jugador_x_cambio = 0
 
-    # Modificar Jugador
+    # Modificar ubicacion del Jugador
     jugador_x += jugador_x_cambio
 
     # Mantener dentro de la pantalla al jugador
@@ -72,6 +73,17 @@ while se_ejecuta:
         jugador_x = 0
     elif jugador_x >= 736:
         jugador_x = 736
+
+    # Modificar Ubicacion del enemigo
+    enemigo_x += enemigo_x_cambio
+
+    # Mantener dentro de la pantalla al jugador
+    if enemigo_x <= 0:
+        enemigo_x_cambio = 0.2
+        enemigo_y += enemigo_y_cambio
+    elif enemigo_x >= 736:
+        enemigo_x_cambio = -0.2
+        enemigo_y += enemigo_y_cambio
 
     jugador(jugador_x, jugador_y)
     enemigo(enemigo_x, enemigo_y)
